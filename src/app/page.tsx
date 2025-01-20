@@ -2,8 +2,8 @@
 import Box from "@/component/boxAnimation";
 import Cylinder from "@/component/cyclinderAnimation";
 import Sphere from "@/component/sphereAnimation";
-import BoxMaterial from "@/component/RealWorldObj/box";
-import StudioLightScene from "@/component/RealWorldObj/firstModel";
+// import BoxMaterial from "@/component/RealWorldObj/box";
+// import StudioLightScene from "@/component/RealWorldObj/firstModel";
 import { useState } from "react";
 
 export default function Home() {
