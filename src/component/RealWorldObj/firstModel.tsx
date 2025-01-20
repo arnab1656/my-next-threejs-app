@@ -61,31 +61,39 @@ const StudioLightScene = () => {
         // controls.update();
 
         // Traverse the model and set material properties
-        model.traverse((child) => {
-          if ((child as THREE.Mesh).isMesh) {
-            // Type casting to Mesh
-            const mesh = child as THREE.Mesh; // Type cast to Mesh
+        model.traverse(
+          (
+            child: THREE.Mesh<
+              THREE.BufferGeometry<THREE.NormalBufferAttributes>,
+              THREE.Material | THREE.Material[],
+              THREE.Object3DEventMap
+            >
+          ) => {
+            if ((child as THREE.Mesh).isMesh) {
+              // Type casting to Mesh
+              const mesh = child as THREE.Mesh; // Type cast to Mesh
 
-            // Check if the mesh has a single material or an array of materials
-            if (Array.isArray(mesh.material)) {
-              mesh.material.forEach((material) => {
-                if (material instanceof THREE.MeshStandardMaterial) {
-                  material.roughness = 0.5;
-                  material.metalness = 0.5;
-                }
-              });
-            } else {
-              // If it's a single material
-              if (mesh.material instanceof THREE.MeshStandardMaterial) {
-                mesh.material = new THREE.MeshStandardMaterial({
-                  color: mesh.material.color, // Preserve the original color
-                  roughness: 0.5, // Default roughness
-                  metalness: 0.5, // Default metalness
+              // Check if the mesh has a single material or an array of materials
+              if (Array.isArray(mesh.material)) {
+                mesh.material.forEach((material) => {
+                  if (material instanceof THREE.MeshStandardMaterial) {
+                    material.roughness = 0.5;
+                    material.metalness = 0.5;
+                  }
                 });
+              } else {
+                // If it's a single material
+                if (mesh.material instanceof THREE.MeshStandardMaterial) {
+                  mesh.material = new THREE.MeshStandardMaterial({
+                    color: mesh.material.color, // Preserve the original color
+                    roughness: 0.5, // Default roughness
+                    metalness: 0.5, // Default metalness
+                  });
+                }
               }
             }
           }
-        });
+        );
 
         scene.add(model);
       },
@@ -131,7 +139,7 @@ const StudioLightScene = () => {
       .add(materialProperties, "roughness", 0, 1, 0.01)
       .name("Roughness")
       .onChange((value: number) => {
-        model.traverse((child) => {
+        model.traverse((child: unknown) => {
           if ((child as THREE.Mesh).isMesh) {
             const mesh = child as THREE.Mesh;
             if (mesh.material instanceof THREE.MeshStandardMaterial) {
@@ -145,14 +153,22 @@ const StudioLightScene = () => {
       .add(materialProperties, "metalness", 0, 1, 0.01)
       .name("Metalness")
       .onChange((value: number) => {
-        model.traverse((child) => {
-          if ((child as THREE.Mesh).isMesh) {
-            const mesh = child as THREE.Mesh;
-            if (mesh.material instanceof THREE.MeshStandardMaterial) {
-              mesh.material.metalness = value;
+        model.traverse(
+          (
+            child: THREE.Mesh<
+              THREE.BufferGeometry<THREE.NormalBufferAttributes>,
+              THREE.Material | THREE.Material[],
+              THREE.Object3DEventMap
+            >
+          ) => {
+            if ((child as THREE.Mesh).isMesh) {
+              const mesh = child as THREE.Mesh;
+              if (mesh.material instanceof THREE.MeshStandardMaterial) {
+                mesh.material.metalness = value;
+              }
             }
           }
-        });
+        );
       });
 
     // Ambient Light GUI
